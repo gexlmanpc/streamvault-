@@ -31,7 +31,7 @@ const styles = {
 };
 
 const defaultVideos = [
-  { id: 1, title: 'فيلم الأكشن', genre: 'أكشن', emoji: '💥', year: 2024, url: 'https://1024terabox.com/s/14Ew4YFvp_j1dwFg17yuz0g' },
+  { id: 1, title: 'فيلم الأكشن', genre: 'أكشن', emoji: '💥', year: 2024, url: 'https://drive.google.com/file/d/17Q-QCqpr2Peve0St6XUttIeIaVv5X3R6/preview' },
   { id: 2, title: 'مسلسل الدراما', genre: 'دراما', emoji: '🎭', year: 2024, url: null },
   { id: 3, title: 'فيلم الرعب', genre: 'رعب', emoji: '👻', year: 2023, url: null },
 ];
@@ -128,7 +128,7 @@ export default function App() {
       {/* Hero مع فيديو في الخلفية */}
       <div style={styles.hero}>
         <iframe
-          src="https://1024terabox.com/s/14Ew4YFvp_j1dwFg17yuz0g"
+          src="https://drive.google.com/file/d/17Q-QCqpr2Peve0St6XUttIeIaVv5X3R6/preview"
           style={styles.heroVideo}
           frameBorder="0"
           allowFullScreen
