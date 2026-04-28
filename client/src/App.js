@@ -29,9 +29,9 @@ const styles = {
 };
 
 const defaultVideos = [
-  { id: 1, title: 'فيلم الأكشن', genre: 'أكشن', emoji: '💥', year: 2024, url: null },
-  { id: 2, title: 'مسلسل الدراما', genre: 'دراما', emoji: '🎭', year: 2024, url: null },
-  { id: 3, title: 'فيلم الرعب', genre: 'رعب', emoji: '👻', year: 2023, url: null },
+  { id: 1, title: 'فيلم الأكشن', genre: 'أكشن', emoji: '💥', year: 2024, url: 'https://1024terabox.com/s/14Ew4YFvp_j1dwFg17yuz0g' },
+  { id: 2, title: 'مسلسل الدراما', genre: 'دراما', emoji: '🎭', year: 2024, url: 'https://1024terabox.com/s/14Ew4YFvp_j1dwFg17yuz0g' },
+  { id: 3, title: 'فيلم الرعب', genre: 'رعب', emoji: '👻', year: 2023, url: 'https://1024terabox.com/s/14Ew4YFvp_j1dwFg17yuz0g' },
 ];
 
 export default function App() {
