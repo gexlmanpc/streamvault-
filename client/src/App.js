@@ -37,7 +37,7 @@ const seriesEpisodes = [
 ];
 
 const defaultVideos = [
-  { id: 1, title: 'مسلسلات', genre: 'مسلسلات', emoji: '📺', year: 2024, isSeries: true },
+  { id: 1, title: 'لا تخف أنا بجانبك', genre: 'مسلسلات', emoji: '📺', year: 2024, isSeries: true },
   { id: 2, title: 'أفلام', genre: 'أفلام', emoji: '🎬', year: 2024, url: null },
   { id: 3, title: 'وثائقيات', genre: 'وثائقي', emoji: '🌍', year: 2024, url: null },
 ];
