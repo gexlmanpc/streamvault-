@@ -32,6 +32,7 @@ const styles = {
 
 const seriesEpisodes = [
   { id: 1, title: 'الحلقة الأولى', desc: 'بداية القصة', url: 'https://www.youtube.com/embed/c-yWvmsvMF8' },
+  { id: 2, title: 'الحلقة الثانية', desc: '', url: 'https://www.youtube.com/embed/IHLJH8vJUts' },
 ];
 
 const defaultVideos = [
