@@ -15,7 +15,7 @@ const styles = {
   section: { padding: '40px' },
   sectionTitle: { fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '20px' },
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '15px' },
-  card: { borderRadius: '8px', overflow: 'hidden', cursor: 'pointer', transition: 'transform 0.3s', background: '#1a1a1a', position: 'relative' },
+  card: { borderRadius: '8px', overflow: 'hidden', cursor: 'pointer', transition: 'transform 0.3s', background: '#1a1a1a' },
   cardThumb: { width: '100%', height: '140px', background: '#222', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '4rem', position: 'relative' },
   playOverlay: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.3s', fontSize: '3rem' },
   cardInfo: { padding: '12px' },
@@ -26,12 +26,18 @@ const styles = {
   input: { width: '100%', padding: '15px', background: '#333', border: 'none', borderRadius: '5px', color: 'white', fontSize: '1rem', marginBottom: '15px', boxSizing: 'border-box' },
   modalTitle: { fontSize: '1.8rem', fontWeight: 'bold', marginBottom: '25px' },
   closeBtn: { background: 'none', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', float: 'right' },
+  epCard: { display: 'flex', gap: '15px', alignItems: 'center', background: '#222', borderRadius: '8px', padding: '15px', marginBottom: '10px', cursor: 'pointer', transition: 'background 0.2s' },
+  epNum: { background: '#E50914', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', flexShrink: 0 },
 };
 
+const seriesEpisodes = [
+  { id: 1, title: 'الحلقة الأولى', desc: 'بداية القصة', url: 'https://www.youtube.com/embed/c-yWvmsvMF8' },
+];
+
 const defaultVideos = [
-  { id: 1, title: 'فيلم الأكشن', genre: 'أكشن', emoji: '💥', year: 2024, url: 'https://www.youtube.com/embed/c-yWvmsvMF8' },
-  { id: 2, title: 'مسلسل الدراما', genre: 'دراما', emoji: '🎭', year: 2024, url: null },
-  { id: 3, title: 'فيلم الرعب', genre: 'رعب', emoji: '👻', year: 2023, url: null },
+  { id: 1, title: 'مسلسلات', genre: 'مسلسلات', emoji: '📺', year: 2024, isSeries: true },
+  { id: 2, title: 'أفلام', genre: 'أفلام', emoji: '🎬', year: 2024, url: null },
+  { id: 3, title: 'وثائقيات', genre: 'وثائقي', emoji: '🌍', year: 2024, url: null },
 ];
 
 export default function App() {
@@ -39,6 +45,8 @@ export default function App() {
   const [showRegister, setShowRegister] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
   const [showPlayer, setShowPlayer] = useState(null);
+  const [showSeries, setShowSeries] = useState(false);
+  const [episodes, setEpisodes] = useState(seriesEpisodes);
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [videos, setVideos] = useState(defaultVideos);
@@ -49,8 +57,19 @@ export default function App() {
   const [uploadGenre, setUploadGenre] = useState('أكشن');
   const [uploadUrl, setUploadUrl] = useState('');
   const [uploadEmoji, setUploadEmoji] = useState('🎬');
+  const [addEpTitle, setAddEpTitle] = useState('');
+  const [addEpUrl, setAddEpUrl] = useState('');
+  const [addEpDesc, setAddEpDesc] = useState('');
+  const [showAddEp, setShowAddEp] = useState(false);
   const [error, setError] = useState('');
   const [hoveredCard, setHoveredCard] = useState(null);
+
+  const toEmbed = url => {
+    if (!url) return url;
+    if (url.includes('youtube.com/watch?v=')) return url.replace('watch?v=', 'embed/').split('&')[0];
+    if (url.includes('youtu.be/')) return 'https://www.youtube.com/embed/' + url.split('youtu.be/')[1].split('?')[0];
+    return url;
+  };
 
   const handleLogin = async () => {
     setError('');
@@ -74,11 +93,14 @@ export default function App() {
 
   const handleUpload = () => {
     if (!uploadTitle || !uploadUrl) { setError('أدخل العنوان والرابط'); return; }
-    let embedUrl = uploadUrl;
-    if (uploadUrl.includes('youtube.com/watch?v=')) embedUrl = uploadUrl.replace('watch?v=', 'embed/');
-    if (uploadUrl.includes('youtu.be/')) embedUrl = uploadUrl.replace('youtu.be/', 'www.youtube.com/embed/');
-    setVideos([...videos, { id: videos.length + 1, title: uploadTitle, genre: uploadGenre, emoji: uploadEmoji, year: new Date().getFullYear(), url: embedUrl }]);
+    setVideos([...videos, { id: videos.length + 1, title: uploadTitle, genre: uploadGenre, emoji: uploadEmoji, year: new Date().getFullYear(), url: toEmbed(uploadUrl) }]);
     setUploadTitle(''); setUploadUrl(''); setUploadEmoji('🎬'); setShowUpload(false); setError('');
+  };
+
+  const handleAddEp = () => {
+    if (!addEpTitle || !addEpUrl) { setError('أدخل العنوان والرابط'); return; }
+    setEpisodes([...episodes, { id: episodes.length + 1, title: addEpTitle, desc: addEpDesc, url: toEmbed(addEpUrl) }]);
+    setAddEpTitle(''); setAddEpUrl(''); setAddEpDesc(''); setShowAddEp(false); setError('');
   };
 
   return (
@@ -114,36 +136,60 @@ export default function App() {
 
       {/* Videos Section */}
       <div style={styles.section} id="videos">
-        <div style={styles.sectionTitle}>🔥 الأفلام والمسلسلات</div>
+        <div style={styles.sectionTitle}>🔥 المحتوى المتاح</div>
         <div style={styles.grid}>
           {videos.map(v => (
             <div key={v.id} style={styles.card}
               onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; setHoveredCard(v.id); }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; setHoveredCard(null); }}
-              onClick={() => v.url ? setShowPlayer(v) : setShowLogin(true)}>
-              <div style={styles.cardThumb}>
+              onClick={() => v.isSeries ? setShowSeries(true) : v.url ? setShowPlayer(v) : null}>
+              <div style={{ ...styles.cardThumb, position: 'relative' }}>
                 {v.emoji}
-                <div style={{ ...styles.playOverlay, opacity: hoveredCard === v.id ? 1 : 0 }}>▶</div>
+                <div style={{ ...styles.playOverlay, opacity: hoveredCard === v.id ? 1 : 0 }}>
+                  {v.isSeries ? '📋' : '▶'}
+                </div>
               </div>
               <div style={styles.cardInfo}>
                 <div style={styles.cardTitle}>{v.title}</div>
                 <div style={styles.cardMeta}>{v.genre} • {v.year}</div>
-                {v.url && <div style={{ color: '#E50914', fontSize: '0.8rem', marginTop: '5px' }}>▶ شاهد الآن</div>}
+                <div style={{ color: '#E50914', fontSize: '0.8rem', marginTop: '5px' }}>
+                  {v.isSeries ? `📺 ${episodes.length} حلقة متوفرة` : v.url ? '▶ شاهد الآن' : '🔜 قريباً'}
+                </div>
               </div>
             </div>
           ))}
-          {/* زر إضافة فيديو */}
-          {user && (
-            <div style={{ ...styles.card, border: '2px dashed #555', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '200px' }}
-              onClick={() => setShowUpload(true)}>
-              <div style={{ textAlign: 'center', color: '#555' }}>
-                <div style={{ fontSize: '3rem' }}>+</div>
-                <div>أضف فيديو</div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Series Episodes Modal */}
+      {showSeries && (
+        <div style={styles.modal} onClick={() => setShowSeries(false)}>
+          <div style={{ background: '#1a1a1a', borderRadius: '12px', padding: '30px', width: '600px', maxWidth: '90%', maxHeight: '80vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>📺 الحلقات المتوفرة</h2>
+              <button style={styles.closeBtn} onClick={() => setShowSeries(false)}>✕</button>
+            </div>
+            {episodes.map((ep, i) => (
+              <div key={ep.id} style={styles.epCard}
+                onMouseEnter={e => e.currentTarget.style.background = '#333'}
+                onMouseLeave={e => e.currentTarget.style.background = '#222'}
+                onClick={() => { setShowPlayer(ep); setShowSeries(false); }}>
+                <div style={styles.epNum}>{i + 1}</div>
+                <div>
+                  <div style={{ fontWeight: 'bold' }}>{ep.title}</div>
+                  <div style={{ color: '#aaa', fontSize: '0.85rem' }}>{ep.desc}</div>
+                </div>
+                <div style={{ marginRight: 'auto', color: '#E50914' }}>▶</div>
+              </div>
+            ))}
+            {user && (
+              <button style={{ ...styles.btn, width: '100%', marginLeft: 0, marginTop: '15px' }} onClick={() => { setShowSeries(false); setShowAddEp(true); }}>
+                + أضف حلقة جديدة
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Video Player */}
       {showPlayer && (
@@ -154,6 +200,21 @@ export default function App() {
               <button style={styles.closeBtn} onClick={() => setShowPlayer(null)}>✕</button>
             </div>
             <iframe src={showPlayer.url} style={{ width: '100%', height: '500px', border: 'none', borderRadius: '8px' }} allowFullScreen title={showPlayer.title} />
+          </div>
+        </div>
+      )}
+
+      {/* Add Episode Modal */}
+      {showAddEp && (
+        <div style={styles.modal} onClick={() => setShowAddEp(false)}>
+          <div style={styles.modalBox} onClick={e => e.stopPropagation()}>
+            <button style={styles.closeBtn} onClick={() => setShowAddEp(false)}>✕</button>
+            <h2 style={styles.modalTitle}>+ إضافة حلقة</h2>
+            {error && <p style={{ color: '#E50914', marginBottom: '10px' }}>{error}</p>}
+            <input style={styles.input} placeholder="عنوان الحلقة" value={addEpTitle} onChange={e => setAddEpTitle(e.target.value)} />
+            <input style={styles.input} placeholder="وصف الحلقة (اختياري)" value={addEpDesc} onChange={e => setAddEpDesc(e.target.value)} />
+            <input style={styles.input} placeholder="رابط YouTube" value={addEpUrl} onChange={e => setAddEpUrl(e.target.value)} />
+            <button style={{ ...styles.btn, width: '100%', marginLeft: 0 }} onClick={handleAddEp}>✅ إضافة</button>
           </div>
         </div>
       )}
@@ -200,8 +261,8 @@ export default function App() {
               <option>أكشن</option><option>دراما</option><option>كوميديا</option><option>رعب</option><option>وثائقي</option><option>خيال علمي</option>
             </select>
             <input style={styles.input} placeholder="إيموجي (مثال: 🎬)" value={uploadEmoji} onChange={e => setUploadEmoji(e.target.value)} />
-            <input style={styles.input} placeholder="رابط YouTube أو أي رابط embed" value={uploadUrl} onChange={e => setUploadUrl(e.target.value)} />
-            <button style={{ ...styles.btn, width: '100%', marginLeft: 0 }} onClick={handleUpload}>✅ إضافة للموقع</button>
+            <input style={styles.input} placeholder="رابط YouTube" value={uploadUrl} onChange={e => setUploadUrl(e.target.value)} />
+            <button style={{ ...styles.btn, width: '100%', marginLeft: 0 }} onClick={handleUpload}>✅ إضافة</button>
           </div>
         </div>
       )}
