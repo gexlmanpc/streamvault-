@@ -31,9 +31,9 @@ const styles = {
 };
 
 const seriesEpisodes = [
-  { id: 1, title: 'الحلقة الأولى', desc: 'بداية القصة', url: 'https://www.youtube.com/embed/c-yWvmsvMF8' },
-  { id: 2, title: 'الحلقة الثانية', desc: '', url: 'https://www.youtube.com/embed/IHLJH8vJUts' },
-  { id: 3, title: 'الحلقة الثالثة', desc: '', url: 'https://www.youtube.com/embed/p_SOZAh6Hxk' },
+  { id: 1, title: 'الحلقة الثانية', desc: '', url: 'https://www.youtube.com/embed/c-yWvmsvMF8' },
+  { id: 2, title: 'الحلقة الثالثة', desc: '', url: 'https://www.youtube.com/embed/IHLJH8vJUts' },
+  { id: 3, title: 'الحلقة الرابعة', desc: '', url: 'https://www.youtube.com/embed/p_SOZAh6Hxk' },
 ];
 
 const defaultVideos = [
